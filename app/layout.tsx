@@ -1,3 +1,4 @@
+import Navigation from '@/components/Navigation'
 import './globals.css'
 import { Inter } from 'next/font/google'
 
@@ -15,7 +16,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className='flex min-h-screen max-w-4xl mx-auto mt-4'>
+          <div className='grid grid-cols-3 gap-4 w-full'>
+            <div className='sticky top-0'>
+              <Navigation />
+            </div>
+            <div className='col-span-2'>
+              {children}
+            </div>
+          </div>
+        </div>
+      </body>
     </html>
   )
 }

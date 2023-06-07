@@ -5,10 +5,10 @@ import Avatar from './Avatar'
 
 export default function Form() {
     return (
-        <Card>
+        <Card noPadding={false}>
             <form>
                 <div className='flex gap-3'>
-                    <Avatar />
+                    <Avatar size={12} />
                     <textarea rows={1} className='grow p-3' placeholder={`What's on your mind, Brian?`} />
                 </div>
                 <div className='flex gap-5 w-full items-center mt-2'>

@@ -1,27 +1,21 @@
-"use client"
-
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
-import '../../globals.css'
-import { Inter } from 'next/font/google'
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import '../../globals.css';
+import { Inter } from 'next/font/google';
+import AuthComponent from '@/components/Auth/AuthComponent';
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const metadata = {
+  title: 'Login - Social Tutorial',
+  description: 'Social Media Tutorial using NextJS and Supabase',
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function LoginLayout({ children, }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${inter.className} max-w-6xl mx-auto`}>
-        <SessionContextProvider
-            supabaseClient={createBrowserSupabaseClient()}
-            initialSession={null}
-        >
-            {children}
-        </SessionContextProvider>
+        <AuthComponent>
+          {children}
+        </AuthComponent>
       </body>
     </html>
   )

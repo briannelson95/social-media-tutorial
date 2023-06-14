@@ -8,7 +8,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import ProfilePhotos from '@/components/ProfilePhotos'
 
-export default function Profile() {
+export default function ProfilePage() {
     const activeClasses = 'border-blue-500 text-blue-800 bg-blue-500/20  font-semibold';
     const hoverClasses = 'hover:border-gray-300 hover:bg-gray-300/50 transition-all';
 

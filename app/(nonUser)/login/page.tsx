@@ -1,7 +1,7 @@
 import LoginCard from '@/components/LoginCard'
 import React from 'react'
 
-export default function page() {
+export default function LoginPage() {
     return (
         <main className='h-screen flex items-center justify-center'>
             <section className='max-w-sm w-full'>

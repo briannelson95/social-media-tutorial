@@ -19,13 +19,13 @@ export default function RootLayout({ children, }: { children: React.ReactNode}) 
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} mb-24 md:mb-2`}>
         <div className='flex min-h-screen max-w-4xl mx-auto mt-4'>
-          <div className='grid grid-cols-3 gap-4 w-full'>
-            <div className='sticky top-0'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 w-full'>
+            <div className='fixed bottom-0 md:sticky md:top-0 z-10'>
               <Navigation />
             </div>
-            <div className='col-span-2'>
+            <div className='col-span-1 mx-3 md:mx-0 md:col-span-2'>
               {children}
             </div>
           </div>

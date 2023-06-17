@@ -1,7 +1,19 @@
+"use client"
 import LoginCard from '@/components/LoginCard'
-import React from 'react'
+import { supabase } from '@/lib/supabaseClient';
+import { useSession } from '@supabase/auth-helpers-react'
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react'
 
 export default function LoginPage() {
+    const session = useSession();
+    const supabaseClient = supabase;
+    const router = useRouter();
+
+    useEffect(() => {
+        if (session) router.push('/')
+    }, [session, router]);
+
     return (
         <main className='h-screen flex items-center justify-center'>
             <section className='max-w-sm w-full'>

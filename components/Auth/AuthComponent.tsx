@@ -1,7 +1,7 @@
 "use client"
 
 import { supabase } from '@/lib/supabaseClient'
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
+import { SessionContextProvider, useSession } from '@supabase/auth-helpers-react'
 import React from 'react'
 
 export default function AuthComponent({ children, }: { children: React.ReactNode }) {

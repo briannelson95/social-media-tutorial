@@ -3,10 +3,13 @@
 import React from 'react'
 import Card from './Card'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 export default function Navigation() {
     const pathname = usePathname();
+    const router = useRouter();
+    const supabase = useSupabaseClient();
 
     const activeElemnet = 'text-sm md:text-base bg-blue-500 text-white md:-mx-10 px-2 md:px-10 rounded-md shadow-md shadow-gray-300';
     const nonActiveElement = 'text-sm md:text-base md:-mx-4 px-2 md:px-4 rounded-md hover:bg-blue-500/20 hover:shadow-md hover:shadow-gray-300 transition-all hover:scale-110';
@@ -50,12 +53,19 @@ export default function Navigation() {
                             </Link>
                         </li>
                         <li className={`${pathname === '/logout' ? activeElemnet : nonActiveElement} my-1`}>
-                            <Link href={''} className='flex gap-2 py-3'>
+                            <button 
+                                className='flex gap-2 py-3'
+                                onClick={async () => {
+                                    await supabase.auth.signOut()
+                                    redirect('/login')
+                                  }
+                                }
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                 </svg>
                                 <p className="hidden md:block">Logout</p>
-                            </Link>
+                            </button>
                         </li>
                     </ul>
                 </div>

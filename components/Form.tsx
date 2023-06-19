@@ -11,7 +11,7 @@ type Props = {
     onPost: any;
 }
 
-export default function Form({onPost}: Props) {
+export default function Form() {
     const [content, setContent]:any = useState('');
     const [uploads, setUploads]:any = useState([]);
     const [isUploading, setIsUploading]: any = useState(false);
@@ -19,18 +19,20 @@ export default function Form({onPost}: Props) {
     const supabase = useSupabaseClient();
     const session = useSession();
 
-    const {profile}:any = useContext(UserContext);
+    const {profile, fetchPosts}:any = useContext(UserContext);
 
     function createPost(event: any) {
         event?.preventDefault()
         supabase.from('posts').insert({
             author: session?.user.id,
-            content
+            content,
+            photos: uploads
         }).then(response => {
             if (!response.error){
-                setContent('')
-                if(onPost){
-                    onPost()
+                setContent('');
+                setUploads([]);
+                if(fetchPosts){
+                    fetchPosts()
                 }
             }
         })

@@ -12,9 +12,10 @@ type Props = {
     content: string;
     profiles: any;
     created_at: number;
+    photos: string[];
 }
 
-export default function Post({content, profiles:authorProfile, created_at}: Props) {
+export default function Post({content, profiles:authorProfile, created_at, photos}: Props) {
     const menu = useRef(null);
     const [dropDown, setDropDown] = useState(false);
 
@@ -90,14 +91,29 @@ export default function Post({content, profiles:authorProfile, created_at}: Prop
             </div>
             <div>
                 <p className='my-3 text-sm'>{content}</p>
-                <div className='rounded-md w-full overflow-hidden'>
-                    <Image 
+                <div className='rounded-md w-full overflow-hidden space-y-2'>
+                    {photos.length > 0 && (
+                        <div className='flex w-full gap-2'>
+                            {photos.map((photo: any, index: number) => (
+                                <Image
+                                    key={index}
+                                    src={photo}
+                                    alt=''
+                                    height={300}
+                                    width={300}
+                                    className='object-cover rounded-md'
+                                />
+                            ))}
+                            
+                        </div>
+                    )}
+                    {/* <Image 
                         src={'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'} 
                         alt={''}
                         height={500}
                         width={500}
                         className='object-cover w-full'
-                    />    
+                    />     */}
                 </div>     
             </div>
             <div className='mt-4 flex gap-8'>

@@ -6,13 +6,14 @@ import SideBar from "@/components/SideBar";
 import { UserContext } from "@/contexts/UserContext";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter, redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export default function Home() {
   const session = useSession();
   const supabase = useSupabaseClient();
   const [posts, setPosts]:any = useState([]);
-  const [profile, setProfile]:any = useState(null)
+  const [profile, setProfile]:any = useState(null);
+  // let onPost: any
 
   useEffect(() => {
     fetchPosts();
@@ -34,7 +35,7 @@ export default function Home() {
 
   function fetchPosts() {
     supabase.from('posts')
-      .select('id, content, created_at, profiles(id, name, avatar)')
+      .select('id, content, created_at, photos, profiles(id, name, avatar)')
       .order('created_at', {ascending: false})
       .then(result => {
         setPosts(result?.data)
@@ -47,9 +48,9 @@ export default function Home() {
   // console.log(session)
 
   return (
-    <UserContext.Provider value={{profile}}>
+    <UserContext.Provider value={{ profile, fetchPosts }}>
       <main>
-        <Feed onPost={fetchPosts} posts={posts} />
+        <Feed posts={posts} />
       </main>
     </UserContext.Provider>
   )

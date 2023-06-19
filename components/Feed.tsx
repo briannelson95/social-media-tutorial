@@ -4,13 +4,13 @@ import Post from './Post'
 
 type Props = {
     posts: any;
-    onPost: any;
+    // onPost: any;
 }
 
-export default function Feed({posts, onPost}: Props) {
+export default function Feed({posts}: Props) {
     return (
         <div className='col-span-2'>
-            <Form onPost={onPost()} />
+            <Form />
             {posts ? 
                 posts.map((post: any) => (
                     <Post key={post.create_at} {...post} />

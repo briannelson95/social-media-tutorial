@@ -109,10 +109,10 @@ export default function ProfilePage() {
                     </div>
                 </section>
             </Card>
-            {showPosts && (<Post />)}
+            {/* {showPosts && (<Post />)}
             {showInfo && <ProfileInfo />}
             {showFriends && <ProfileFriends />}
-            {showPhotos && <ProfilePhotos />}
+            {showPhotos && <ProfilePhotos />} */}
         </main>
     )
 }

@@ -1,24 +1,15 @@
 import Navigation from '@/components/Navigation'
 import '../globals.css'
 import { Inter } from 'next/font/google'
-import Session from '@/components/Auth/Session'
-import { useSession } from '@supabase/auth-helpers-react'
-import { redirect } from 'next/navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// export const metadata = {
-//   title: 'Social Tutorial',
-//   description: 'Social Media Tutorial using NextJS and Supabase',
-// }
+export const metadata = {
+  title: 'Social Tutorial',
+  description: 'Social Media Tutorial using NextJS and Supabase',
+}
 
 export default function RootLayout({ children, }: { children: React.ReactNode}) {
-  // const session = useSession();
-  // console.log(session)
-
-  // if (!session) {
-  //   redirect('/login')
-  // }
 
   return (
     <html lang="en">

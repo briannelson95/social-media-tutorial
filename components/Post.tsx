@@ -1,14 +1,24 @@
 "use client"
 
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import Card from './Card'
 import Avatar from './Avatar'
 import Link from 'next/link'
 import Image from 'next/image'
+import ReactTimeAgo from 'react-time-ago'
+import { UserContext } from '@/contexts/UserContext'
 
-export default function Post() {
+type Props = {
+    content: string;
+    profiles: any;
+    created_at: number;
+}
+
+export default function Post({content, profiles:authorProfile, created_at}: Props) {
     const menu = useRef(null);
     const [dropDown, setDropDown] = useState(false);
+
+    const {profile:myProfile}:any = useContext(UserContext);
 
     const handleClick = () => {
         setDropDown(!dropDown)
@@ -27,11 +37,13 @@ export default function Post() {
         <Card noPadding={false}>
             <div className='flex gap-3 w-full items-start relative'>
                 <Link href={'/profile'}>
-                    <Avatar size={12} />
+                    <Avatar size={12} url={authorProfile.avatar} />
                 </Link>
                 <div>
-                    <p><Link href={'/profile'} className='font-semibold hover:underline'>Jon Doe</Link> shared an <Link href={''} className='text-blue-500'>album</Link></p>
-                    <p className='text-gray-500 text-sm'>2 hours ago</p>
+                    <p><Link href={'/profile'} className='font-semibold hover:underline'>{authorProfile.name}</Link> shared an <Link href={''} className='text-blue-500'>post</Link></p>
+                    <p className='text-gray-500 text-sm'>
+                        <ReactTimeAgo date={created_at} />
+                    </p>
                 </div>
                 <button className='ml-auto text-gray-500' onClick={handleClick}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -77,7 +89,7 @@ export default function Post() {
                 </div>
             </div>
             <div>
-                <p className='my-3 text-sm'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque ex hic facere, facilis reiciendis corrupti beatae ullam, accusantium ad harum, pariatur ipsa. Laboriosam consequatur ratione sint dolores. Tempora, optio sunt!</p>
+                <p className='my-3 text-sm'>{content}</p>
                 <div className='rounded-md w-full overflow-hidden'>
                     <Image 
                         src={'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'} 
@@ -109,7 +121,7 @@ export default function Post() {
                 </button>
             </div>
             <div className='flex gap-3 mt-4'>
-                <Avatar size={12} />
+                <Avatar url={myProfile?.avatar} />
                 <div className='border rounded w-full relative h-12'>
                     <textarea className='p-3 w-full' placeholder='Leave a comment' rows={1} />
                     <button className='absolute top-3 right-3 text-gray-400'>

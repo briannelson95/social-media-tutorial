@@ -72,9 +72,9 @@ export default function Form({onPost}: Props) {
                     }
                 </div>
                 {isUploading && (
-                    <>
-                        <BounceLoader />
-                    </>
+                    <div className='my-2'>
+                        <BounceLoader color='#3B82F6' />
+                    </div>
                 )}
                 {uploads.length > 0 && (
                     <div className='w-full grid grid-cols-3 gap-3 my-2'>

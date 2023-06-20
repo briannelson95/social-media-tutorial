@@ -37,11 +37,11 @@ export default function Post({content, profiles:authorProfile, created_at, photo
     return (
         <Card noPadding={false}>
             <div className='flex gap-3 w-full items-start relative'>
-                <Link href={'/profile'}>
+                <Link href={'/profile/'+authorProfile.id}>
                     <Avatar size={12} url={authorProfile.avatar} />
                 </Link>
                 <div>
-                    <p><Link href={'/profile'} className='font-semibold hover:underline'>{authorProfile.name}</Link> shared an <Link href={''} className='text-blue-500'>post</Link></p>
+                    <p><Link href={'/profile/'+authorProfile.id} className='font-semibold hover:underline'>{authorProfile.name}</Link> shared an <Link href={''} className='text-blue-500'>post</Link></p>
                     <p className='text-gray-500 text-sm'>
                         <ReactTimeAgo date={created_at} />
                     </p>

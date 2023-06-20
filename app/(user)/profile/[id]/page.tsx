@@ -5,12 +5,43 @@ import Post from '@/components/Post'
 import ProfileInfo from '@/components/ProfileInfo'
 import ProfileFriends from '@/components/ProfileFriends'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProfilePhotos from '@/components/ProfilePhotos'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+import Cover from '@/components/Cover'
 
 export default function ProfilePage() {
     const activeClasses = 'border-blue-500 text-blue-800 bg-blue-500/20  font-semibold';
     const hoverClasses = 'hover:border-gray-300 hover:bg-gray-300/50 transition-all';
+
+    const [profile, setProfile]:any = useState(null)
+    const params = useParams();
+    const userId = params.id;
+    const supabase = useSupabaseClient();
+    const session = useSession();
+
+    function fetchUser() {
+        supabase.from('profiles')
+            .select()
+            .eq('id', userId)
+            .then(result => {
+                if (result.error) {
+                    throw result.error;
+                }
+                if (result.data) {
+                    setProfile(result?.data[0]);
+                }
+            })
+    }
+
+    useEffect(() => {
+        if (!userId) {
+            return;
+        }
+        fetchUser();
+
+    }, [userId,])
 
     const [showPosts, setShowPosts] = useState(true);
     const [showInfo, setShowInfo] = useState(false);
@@ -45,27 +76,34 @@ export default function ProfilePage() {
         setShowPhotos(true)
     }
 
+    const isMyUser = userId === session?.user.id;
+
     return (
         <main>
             <Card noPadding>
                 <section className='relative'>
-                    <Image
-                        src={'https://images.unsplash.com/photo-1596273214323-a8486cce7c9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'}
-                        alt=''
-                        height={1000}
-                        width={1000}
-                        priority
-                        className='h-56 object-cover rounded-t-md'
-                    />
-                    <div className='absolute -bottom-20 left-4'>
-                        <Avatar size={'big'} />
+                    <div className='h-56 bg-gray-400 rounded-t-md'>
+                        {profile?.cover && (
+                            // <Image
+                            //     src={profile?.cover}
+                            //     alt=''
+                            //     height={1000}
+                            //     width={1000}
+                            //     priority
+                            //     className='h-56 object-cover rounded-t-md'
+                            // />
+                            <Cover url={profile?.cover} editable={isMyUser} onChange={fetchUser} />
+                        )}
+                    </div>
+                    <div className='absolute -bottom-20 left-4 z-30'>
+                        <Avatar url={profile?.avatar} size={'big'} editable={isMyUser} onChange={fetchUser} />
                     </div>
                 </section>
                 <section className='p-2 md:p-4 pb-0'>
                     <div className='ml-36'>
-                        <h1 className='text-3xl font-bold'>Jon Doe</h1>
+                        <h1 className='text-3xl font-bold'>{profile?.name}</h1>
                         <div>
-                            <p className='text-gray-400 leading-4'>Ontario, Canada</p>
+                            <p className='text-gray-400 leading-4'>{profile?.location}</p>
                         </div>
                     </div>
                     <div className='mt-10 flex text-xs md:text-base'>

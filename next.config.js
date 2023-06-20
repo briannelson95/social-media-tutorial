@@ -6,6 +6,7 @@ const nextConfig = {
             'lh3.googleusercontent.com',
             'avatars.githubusercontent.com',
             'xdqxoihviynrdsbjrulm.supabase.co',
+            'localhost',
         ]
     }
 }

@@ -92,7 +92,7 @@ export default function Post({content, profiles:authorProfile, created_at, photo
             <div>
                 <p className='my-3 text-sm'>{content}</p>
                 <div className='rounded-md w-full overflow-hidden space-y-2'>
-                    {photos.length > 0 && (
+                    {photos?.length > 0 && (
                         <div className='flex w-full gap-2'>
                             {photos.map((photo: any, index: number) => (
                                 <Image

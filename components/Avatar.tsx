@@ -1,6 +1,8 @@
+import { uploadUserImage } from '@/helpers/user'
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
+import { BounceLoader } from 'react-spinners'
 
 type Props = {
     size?: any
@@ -13,38 +15,23 @@ export default function Avatar({size, url, editable, onChange}: Props) {
     const [isUploading, setIsUploading]:any = useState(false);
     const supabase = useSupabaseClient();
     const session = useSession();
+    const userId = session?.user.id;
+    const bucket = 'avatars';
+    const profileCol = 'avatar';
 
     const handleAvatar = async (ev: any) => {
         const file = ev.target.files?.[0];
 
         if (file) {
             setIsUploading(true);
-            const newName = Date.now() + file.name;
-            const {data, error} = await supabase.storage
-                .from('avatars')
-                .upload(newName, file);
-
+            await uploadUserImage({supabase, userId, file, bucket, profileCol});
             setIsUploading(false);
-
-            if (error) throw error;
-            if (data) {
-                const url = process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/avatars/' + data?.path;
-                supabase.from('profiles')
-                    .update({
-                        avatar: url,
-                    })
-                    .eq('id', session?.user.id)
-                    .then(result => {
-                        if (!result.error && onChange) {
-                            onChange();
-                        }
-                    })
-            }
+            if (onChange) onChange()
         }
     }
 
     return (
-        <div className={` relative`}>
+        <div className={` relative flex`}>
             <div className={`${size == "big" ? 'w-32 h-32' : 'w-12 h-12'} overflow-hidden rounded-full`}>
                 <Image 
                     src={url ? url : 'https://images.unsplash.com/photo-1567784177951-6fa58317e16b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'} 
@@ -54,6 +41,11 @@ export default function Avatar({size, url, editable, onChange}: Props) {
                     className='object-cover object-bottom'
                 />
             </div>
+            {isUploading && (
+                <div className='absolute bg-white bg-opacity-80 w-full h-full overflow-hidden rounded-full flex justify-center items-center'>
+                    <BounceLoader color='#3B82F6' />
+                </div>
+            )}
             {editable && (
                 <label className='absolute bottom-1 right-1 bg-white text-black rounded-md shadow-gray-400 shadow-md p-1'>
                     <input type='file' className='hidden' onChange={handleAvatar} />

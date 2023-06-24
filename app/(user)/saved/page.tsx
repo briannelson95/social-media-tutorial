@@ -17,6 +17,7 @@ export default function SavedPage() {
         supabase.from('saved_posts')
             .select('post_id')
             .eq('user_id', session?.user.id)
+            .order('created_at', {ascending: false})
             .then(result => {
                 if (!result.error) {
                     const postIds = result.data.map(item => item.post_id);

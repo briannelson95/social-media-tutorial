@@ -30,7 +30,7 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
         fetchLikes()
         fetchComments()
         fetchSaved()
-    }, [])
+    }, [fetchLikes, fetchComments, fetchSaved])
 
     function fetchLikes() {
         supabase.from('likes')

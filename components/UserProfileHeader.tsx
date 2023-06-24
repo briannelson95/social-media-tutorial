@@ -37,7 +37,7 @@ export default function UserProfileHeader({children}: {children: React.ReactNode
         }
         fetchUser();
 
-    }, [userId,]);
+    }, [userId, fetchUser]);
 
     function saveProfile() {
         supabase.from('profiles')

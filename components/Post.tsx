@@ -59,11 +59,9 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
         supabase.from('saved_posts')
             .select()
             .eq('post_id', id)
-            .eq('user_id', myProfile.id)
+            .eq('user_id', myProfile?.id)
             .then(result => {
-                if (!result.error) {
-                    console.log(result)
-                } 
+
             })
     }
 

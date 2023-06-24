@@ -4,12 +4,13 @@ import React from 'react'
 import Card from './Card'
 import Link from 'next/link'
 import { redirect, usePathname, useRouter } from 'next/navigation'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
 export default function Navigation() {
     const pathname = usePathname();
     const router = useRouter();
     const supabase = useSupabaseClient();
+    const session = useSession();
 
     const activeElemnet = 'text-sm md:text-base bg-blue-500 text-white md:-mx-10 px-2 md:px-10 rounded-md shadow-md shadow-gray-300';
     const nonActiveElement = 'text-sm md:text-base md:-mx-4 px-2 md:px-4 rounded-md hover:bg-blue-500/20 hover:shadow-md hover:shadow-gray-300 transition-all hover:scale-110';
@@ -28,8 +29,8 @@ export default function Navigation() {
                                 <p className="hidden md:block">Home</p>
                             </Link>
                         </li>
-                        <li className={`${pathname === '/profile' ? activeElemnet : nonActiveElement} my-1`}>
-                            <Link href={'/profile'} className='flex gap-2 py-3'>
+                        <li className={`${pathname.includes('profile') ? activeElemnet : nonActiveElement} my-1`}>
+                            <Link href={`/profile/${session?.user.id}`} className='flex gap-2 py-3'>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>

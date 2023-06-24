@@ -28,7 +28,6 @@ export default function ProfilePosts() {
 
     }, [userId])
 
-    console.log(posts)
     return (
         <>
             {posts.length > 0 && posts.map((post: any) => (

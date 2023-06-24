@@ -1,12 +1,10 @@
 "use client"
 
 import Feed from "@/components/Feed";
-import Navigation from "@/components/Navigation";
-import SideBar from "@/components/SideBar";
 import { UserContext } from "@/contexts/UserContext";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useRouter, redirect } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const session = useSession();

@@ -1,6 +1,5 @@
 "use client"
 
-import Card from '@/components/Card';
 import Post from '@/components/Post';
 import { ProfileContext } from '@/contexts/UserContext';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -19,11 +18,14 @@ export default function ProfilePosts() {
         }
         supabase.from('posts')
             .select('id, content, created_at, photos, profiles(id, name, avatar)')
+            .order('created_at', {ascending: false})
             .eq('author', userId)
+            .is('parent', null)
             .then(result => {
-                if (!result.error) {
-                    setPosts(result.data)
-                }
+                // if (!result.error) {
+                    
+                // }
+                setPosts(result.data)
             })
 
     }, [userId])

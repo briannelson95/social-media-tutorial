@@ -6,7 +6,7 @@ import { BounceLoader } from 'react-spinners'
 
 type Props = {
     size?: any
-    url?: string
+    url: string
     editable?: boolean;
     onChange?: any;
 }
@@ -33,13 +33,17 @@ export default function Avatar({size, url, editable, onChange}: Props) {
     return (
         <div className={` relative flex`}>
             <div className={`${size == "big" ? 'w-32 h-32' : 'w-12 h-12'} overflow-hidden rounded-full`}>
-                <Image 
-                    src={url ? url : 'https://images.unsplash.com/photo-1567784177951-6fa58317e16b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'} 
-                    height={200} 
-                    width={200} 
-                    alt={''}
-                    className='object-cover object-bottom'
-                />
+                {url ? (
+                    <Image 
+                        src={url} 
+                        height={200} 
+                        width={200} 
+                        alt={''}
+                        className='object-cover object-bottom'
+                    />
+                ) : (
+                    <div className='bg-gray-300' />
+                )} 
             </div>
             {isUploading && (
                 <div className='absolute bg-white bg-opacity-80 w-full h-full overflow-hidden rounded-full flex justify-center items-center'>

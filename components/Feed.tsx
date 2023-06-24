@@ -13,7 +13,7 @@ export default function Feed({posts}: Props) {
             <Form />
             {posts ? 
                 posts.map((post: any) => (
-                    <Post key={post.create_at} {...post} />
+                    <Post key={post.created_at} {...post} />
                 ))
                 : 'Loading posts'
             }

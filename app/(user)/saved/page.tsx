@@ -31,7 +31,7 @@ export default function SavedPage() {
                 }
             })
 
-    }, [session?.user.id, supabase])
+    }, [session?.user.id])
     return (
         <main>
             <UserContextProvider>

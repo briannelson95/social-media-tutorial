@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts])
+  }, [])
 
   useEffect(() => {
     if (!session?.user.id) {
@@ -29,7 +29,7 @@ export default function Home() {
           setProfile(result?.data[0])
         }
       })
-  }, [session?.user.id, supabase]);
+  }, [session?.user.id]);
 
   function fetchPosts() {
     supabase.from('posts')

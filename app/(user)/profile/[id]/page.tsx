@@ -28,7 +28,7 @@ export default function ProfilePosts() {
                 setPosts(result.data)
             })
 
-    }, [userId, supabase])
+    }, [userId])
 
     return (
         <>

@@ -1,23 +1,71 @@
 "use client"
 
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Card from './Card'
 import Avatar from './Avatar'
 import Link from 'next/link'
 import Image from 'next/image'
 import ReactTimeAgo from 'react-time-ago'
 import { UserContext } from '@/contexts/UserContext'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 type Props = {
+    id: any;
     content: string;
     profiles: any;
     created_at: number;
     photos: string[];
 }
 
-export default function Post({content, profiles:authorProfile, created_at, photos}: Props) {
+export default function Post({id, content, profiles:authorProfile, created_at, photos}: Props) {
     const menu = useRef(null);
     const [dropDown, setDropDown] = useState(false);
+    const [likes, setLikes]:any = useState([]);
+    const [commentText, setCommentText] = useState('');
+    const [comments, setComments]:any = useState([]);
+    const [saved, setSaved]:any = useState(false)
+    const supabase = useSupabaseClient();
+
+    useEffect(() => {
+        fetchLikes()
+        fetchComments()
+        fetchSaved()
+    }, [])
+
+    function fetchLikes() {
+        supabase.from('likes')
+            .select()
+            .eq('post_id', id)
+            .then(result => {
+                if(!result.error) {
+                    setLikes(result.data)
+                }
+            })
+    };
+
+    function fetchComments() {
+        supabase.from('posts')
+            .select('*, profiles(*)')
+            .eq('parent', id)
+            .then(result => {
+                if (!result.error){
+                    setComments(result.data);
+                }
+            })
+            
+    };
+
+    function fetchSaved() {
+        supabase.from('saved_posts')
+            .select()
+            .eq('post_id', id)
+            .eq('user_id', myProfile.id)
+            .then(result => {
+                if (!result.error) {
+                    console.log(result)
+                } 
+            })
+    }
 
     const {profile:myProfile}:any = useContext(UserContext);
 
@@ -29,6 +77,70 @@ export default function Post({content, profiles:authorProfile, created_at, photo
         //@ts-ignore
         if (menu.current && dropDown && !menu.current.contains(e.target)){
             setDropDown(false)
+        }
+    }
+
+    const isLikedByMe = !!likes.find((like:any) => like.user_id === myProfile?.id);
+
+    const handleLike = () => {
+        if (isLikedByMe) {
+            supabase.from('likes')
+                .delete()
+                .eq('post_id', id)
+                .eq('user_id', myProfile.id)
+                .then(() => {
+                    fetchLikes();
+                });
+            return;
+        }
+        supabase.from('likes')
+            .insert({
+                post_id: id,
+                user_id: myProfile.id,
+            })
+            .then(result => {
+                fetchLikes()
+            })
+    };
+
+    const postComment = (e: any) => {
+        e.preventDefault();
+        supabase.from('posts')
+            .insert({
+                content: commentText,
+                author: myProfile.id,
+                parent: id,
+            })
+            .then(result => {
+                fetchComments();
+                setCommentText('');
+            })
+    };
+
+    const handleBookmark = () => {
+        if (!saved) {
+            supabase.from('saved_posts')
+                .insert({
+                    user_id: myProfile?.id,
+                    post_id: id,
+                })
+                .then(result => {
+                    setDropDown(false)
+                    setSaved(true)
+                    fetchSaved();
+                })
+        }
+        if (saved) {
+            supabase.from('saved_posts')
+                .delete()
+                .eq('post_id', id)
+                .eq('user_id', myProfile?.id)
+                .then((result) => {
+                    setDropDown(false)
+                    setSaved(false)
+                    fetchSaved();
+                });
+            return;
         }
     }
 
@@ -51,14 +163,21 @@ export default function Post({content, profiles:authorProfile, created_at, photo
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                     </svg>
                 </button>
-                {dropDown && <div className='h-5 w-5 absolute top-0 right-0 cursor-pointer' /> }
-                <div className={`absolute bg-white top-6 -right-6 p-3 shadow-md shadow-gray-300 rounded-sm border border-gray-100 ${dropDown ? 'opacity-100': 'opacity-0'} transition-all duration-150`}>
+                {dropDown && <div className='h-5 w-5 absolute top-1 right-1 cursor-pointer' /> }
+                <div className={`absolute z-50 bg-white top-6 -right-6 p-3 shadow-md shadow-gray-300 rounded-sm border border-gray-100 ${dropDown ? 'opacity-100': 'opacity-0'} transition-all duration-150`}>
                     <div ref={menu} className={`${dropDown ? 'opactity-100' : 'opacity-0'}`}>
-                        <button className='flex w-full items-center gap-2 py-2 px-2 hover:bg-blue-500/20 rounded-md hover:shadow shadow-grey-300'>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                            </svg>
-                            Save post 
+                        <button onClick={handleBookmark} className='flex w-full items-center gap-2 py-2 px-2 hover:bg-blue-500/20 rounded-md hover:shadow shadow-grey-300'>
+                            {saved && (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l1.664 1.664M21 21l-1.5-1.5m-5.485-1.242L12 17.25 4.5 21V8.742m.164-4.078a2.15 2.15 0 011.743-1.342 48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185V19.5M4.664 4.664L19.5 19.5" />
+                                </svg>
+                            )}
+                            {!saved && (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className={`w-6 h-6`}>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                                </svg>
+                            )}
+                            {saved ? "Remove from saved" : "Save post"}
                         </button>
                         <button className='flex w-full items-center gap-2 py-2 px-2 hover:bg-blue-500/20 rounded-md hover:shadow shadow-grey-300'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -107,27 +226,20 @@ export default function Post({content, profiles:authorProfile, created_at, photo
                             
                         </div>
                     )}
-                    {/* <Image 
-                        src={'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'} 
-                        alt={''}
-                        height={500}
-                        width={500}
-                        className='object-cover w-full'
-                    />     */}
                 </div>     
             </div>
             <div className='mt-4 flex gap-8'>
-                <button className='flex gap-2 items-center'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <button className='flex gap-2 items-center' onClick={handleLike}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-6 h-6 ${isLikedByMe && 'fill-pink-600 text-pink-600'}`}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
-                    72
+                    {likes?.length}
                 </button>
                 <button className='flex gap-2 items-center'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
                     </svg>
-                    11
+                    {comments?.length}
                 </button>
                 <button className='flex gap-2 items-center'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -138,8 +250,15 @@ export default function Post({content, profiles:authorProfile, created_at, photo
             </div>
             <div className='flex gap-3 mt-4'>
                 <Avatar url={myProfile?.avatar} />
-                <div className='border rounded w-full relative h-12'>
-                    <textarea className='p-3 w-full' placeholder='Leave a comment' rows={1} />
+                <div className='border rounded w-full relative h-12 z-0'>
+                    <form onSubmit={postComment}>
+                        <input 
+                            className='p-3 w-full' 
+                            placeholder='Leave a comment' 
+                            value={commentText}
+                            onChange={ev => setCommentText(ev.target.value)}
+                        />
+                    </form>
                     <button className='absolute top-3 right-3 text-gray-400'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -148,6 +267,26 @@ export default function Post({content, profiles:authorProfile, created_at, photo
                     </button>
                 </div>
             </div>
+            {comments?.length > 0 && (
+                <div className='mt-2'>
+                    {comments.map((comment:any) => (
+                        <div key={comment.id} className='flex mt-2 gap-2 items-center'>
+                            <Avatar url={comment.profiles.avatar} />
+                            <div className='bg-gray-200 py-2 px-4 rounded-3xl'>
+                                <div className='flex gap-1'>
+                                    <Link href={`/profile/${comment.profiles.id}`} className='font-semibold block -mb-1 hover:underline'>
+                                        {comment.profiles.name}
+                                    </Link>
+                                    <span className='text-sm text-gray-400'>
+                                        <ReactTimeAgo timeStyle={'twitter'} date={comment.created_at} />
+                                    </span>
+                                </div>
+                                <p className='text-sm'>{comment.content}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </Card>
     )
 }

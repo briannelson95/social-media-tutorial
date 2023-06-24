@@ -31,7 +31,7 @@ export default function ProfilePosts() {
     console.log(posts)
     return (
         <>
-            {posts.map((post: any) => (
+            {posts.length > 0 && posts.map((post: any) => (
                 <Post key={post.id} {...post} />
             ))}
         </>

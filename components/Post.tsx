@@ -162,7 +162,7 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
                     </svg>
                 </button>
                 {dropDown && <div className='h-5 w-5 absolute top-1 right-1 cursor-pointer' /> }
-                <div className={`absolute z-50 bg-white top-6 -right-6 p-3 shadow-md shadow-gray-300 rounded-sm border border-gray-100 ${dropDown ? 'opacity-100': 'opacity-0'} transition-all duration-150`}>
+                <div className={`absolute ${dropDown ? "z-50" : "-z-10"} bg-white top-6 -right-6 p-3 shadow-md shadow-gray-300 rounded-sm border border-gray-100 ${dropDown ? 'opacity-100': 'opacity-0'} transition-all duration-150`}>
                     <div ref={menu} className={`${dropDown ? 'opactity-100' : 'opacity-0'}`}>
                         <button onClick={handleBookmark} className='flex w-full items-center gap-2 py-2 px-2 hover:bg-blue-500/20 rounded-md hover:shadow shadow-grey-300'>
                             {saved && (

@@ -145,36 +145,39 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
     }
 
     const handleDelete = () => {
-        supabase.from('likes')
-            .delete()
-            .eq('post_id', id)
-            .then(() => {
-                supabase.from('saved_posts')
-                    .delete()
-                    .eq('post_id', id)
-                    .then(() => {
-                        supabase.from('posts')
-                            .delete()
-                            .eq('parent', id)
-                            .then(() => {
-                                supabase.from('posts')
-                                    .delete()
-                                    .eq('id', id)
-                                    .eq('author', myProfile.id)
-                                    .then(result => {
-                                        if(!result.error) {
-                                            toast.success("Post deleted");
-                                            if (fetchPosts) {
-                                                fetchPosts()
+        if (authorProfile.id == myProfile.id) {
+            supabase.from('likes')
+                .delete()
+                .eq('post_id', id)
+                .then(() => {
+                    supabase.from('saved_posts')
+                        .delete()
+                        .eq('post_id', id)
+                        .then(() => {
+                            supabase.from('posts')
+                                .delete()
+                                .eq('parent', id)
+                                .then(() => {
+                                    supabase.from('posts')
+                                        .delete()
+                                        .eq('id', id)
+                                        .eq('author', myProfile.id)
+                                        .then(result => {
+                                            if(!result.error) {
+                                                toast.success("Post deleted");
+                                                if (fetchPosts) {
+                                                    fetchPosts()
+                                                }
+                                                setDropDown(false);
+                                            } else {
+                                                console.log(result)
                                             }
-                                            setDropDown(false);
-                                        } else {
-                                            console.log(result)
-                                        }
-                                    })
-                            })
-                    })
-            })
+                                        })
+                                })
+                        })
+                })
+        }
+        
     }
 
     document.addEventListener('mousedown', closeOpenMenus)

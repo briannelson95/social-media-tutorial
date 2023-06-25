@@ -27,10 +27,10 @@ export default function ProfileInfo() {
     return (
         <Card noPadding={false}>
             <h2 className='text-3xl mb-2'>About Me</h2>
-            {bio ? (
-                <p className='mb-2 text-sm'>{bio}</p>
-            ) : (
+            {bio === null ? (
                 <>Nothing to show yet...</>
+            ) : (
+                <p className='mb-2 text-sm'>{bio}</p>
             )}
             
         </Card>

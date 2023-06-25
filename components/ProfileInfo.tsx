@@ -11,7 +11,6 @@ export default function ProfileInfo() {
 
     const params = useParams()
     const profile: any = params.id;
-    console.log(profile)
 
     const [bio, setBio]:any = useState('');
 
@@ -20,10 +19,8 @@ export default function ProfileInfo() {
             .select('bio')
             .eq('id', profile)
             .then(result => {
-                console.log(result)
                 if(result.data) {
-                    // setBio(result.data[0])
-                    console.log(result.data[0].bio)
+                    setBio(result.data[0].bio)
                 } return;
             })
     }, [])

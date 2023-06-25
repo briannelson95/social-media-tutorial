@@ -19,7 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!session?.user.id) {
-      return;
+      redirect('/login')
     }
     supabase.from('profiles')
       .select()
@@ -41,9 +41,6 @@ export default function Home() {
       })
   };
 
-  if (!session) {
-    redirect('/login')
-  }
   // console.log(session)
 
   return (

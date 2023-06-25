@@ -15,7 +15,7 @@ export default function LoginPage() {
         if (session) redirect('/')
     }, [session, router]);
 
-    if (session) redirect('/')
+    // if (session) redirect('/')
 
     return (
         <main className='h-screen flex items-center justify-center'>

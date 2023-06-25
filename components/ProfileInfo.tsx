@@ -9,6 +9,7 @@ export default function ProfileInfo() {
     const supabase = useSupabaseClient();
 
     const profile: any = useContext(ProfileContext);
+    console.log(profile)
 
     const [bio, setBio]:any = useState('');
 

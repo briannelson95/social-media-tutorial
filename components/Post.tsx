@@ -66,7 +66,8 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
             })
     }
 
-    const {profile:myProfile}:any = useContext(UserContext);
+    const {profile:myProfile, fetchPosts}:any = useContext(UserContext);
+
 
     const handleClick = () => {
         setDropDown(!dropDown)
@@ -149,9 +150,11 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
             .eq('id', id)
             .eq('author', myProfile.id)
             .then(result => {
-                console.log(result)
                 setDropDown(false)
-                toast("Post deleted")
+                if (fetchPosts) {
+                    fetchPosts();
+                }
+                toast.success("Post deleted")
             })
     }
 

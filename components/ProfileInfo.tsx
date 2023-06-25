@@ -38,10 +38,11 @@ export default function ProfileInfo() {
             })
             .eq('id', session?.user.id)
             .then((result:any) => {
-                if (!result.error) {
+                if (result.data) {
                     setBio(result.data[0].bio)
+                    setEditProfile(false)
+                    fetchBio()
                 }
-                setEditProfile(false)
             })
     }
 
@@ -56,7 +57,7 @@ export default function ProfileInfo() {
                         onClick={() => {
                             setEditProfile(true);
                         }} 
-                        className='bg-white shadow-md shadow-gray-300 px-2 py-1 flex'>
+                        className='bg-white shadow-md shadow-gray-300 px-2 py-1'>
                         Edit Bio
                     </button>
                 )}
@@ -71,7 +72,7 @@ export default function ProfileInfo() {
                         onChange={e => setBio(e.target.value)}
                         className='border py-2 px-3 rounded-md'
                     />
-                    <input type="submit" value="Submit"/>
+                    <input type="submit" value="Submit" className='px-2 py-1 bg-blue-500 text-white hover:bg-blue-700 transition-colors duration-200'/>
                 </form>
             )}
             {!editProfile && bio !== null && (

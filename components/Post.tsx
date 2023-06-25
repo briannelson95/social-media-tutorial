@@ -151,16 +151,23 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
             .then(() => {
                 supabase.from('posts')
                     .delete()
-                    .eq('id', id)
-                    .eq('author', myProfile.id)
-                    .then(result => {
-                        if(!result.error) {
-                            toast.success("Post deleted");
-                            if (fetchPosts) {
-                                fetchPosts()
-                            }
-                            setDropDown(false);
-                        }
+                    .eq('parent', id)
+                    .then(() => {
+                        supabase.from('posts')
+                            .delete()
+                            .eq('id', id)
+                            .eq('author', myProfile.id)
+                            .then(result => {
+                                if(!result.error) {
+                                    toast.success("Post deleted");
+                                    if (fetchPosts) {
+                                        fetchPosts()
+                                    }
+                                    setDropDown(false);
+                                } else {
+                                    console.log(result)
+                                }
+                            })
                     })
             })
     }

@@ -23,6 +23,7 @@ export default function ProfileInfo() {
                 console.log(result)
                 if(result.data) {
                     setBio(result.data[0])
+                    console.log(bio)
                 } return;
             })
     }, [])
@@ -30,9 +31,7 @@ export default function ProfileInfo() {
     return (
         <Card noPadding={false}>
             <h2 className='text-3xl mb-2'>About Me</h2>
-            {bio == null ? (
-                <>Nothing to show yet...</>
-            ) : (
+            {bio && (
                 <p className='mb-2 text-sm'>{bio}</p>
             )}
             

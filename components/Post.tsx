@@ -8,6 +8,7 @@ import Image from 'next/image'
 import ReactTimeAgo from 'react-time-ago'
 import { UserContext } from '@/contexts/UserContext'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import toast from 'react-hot-toast'
 
 type Props = {
     id: any;
@@ -149,6 +150,8 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
             .eq('author', myProfile.id)
             .then(result => {
                 console.log(result)
+                setDropDown(false)
+                toast("Post deleted")
             })
     }
 

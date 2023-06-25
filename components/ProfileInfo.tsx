@@ -18,7 +18,7 @@ export default function ProfileInfo() {
     useEffect(() => {
         supabase.from('profiles')
             .select('bio')
-            .eq('id', profile?.id)
+            .eq('id', profile)
             .then(result => {
                 console.log(result)
                 if(!result.error) {

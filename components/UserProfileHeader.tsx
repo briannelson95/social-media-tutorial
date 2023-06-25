@@ -66,9 +66,7 @@ export default function UserProfileHeader({children}: {children: React.ReactNode
                 <Card noPadding>
                     <section className='relative'>
                         <div className='h-56 bg-gray-400 rounded-t-md'>
-                            {profile?.cover && (
-                                <Cover url={profile?.cover} editable={isMyUser} onChange={fetchUser} />
-                            )}
+                            <Cover url={profile?.cover} editable={isMyUser} onChange={fetchUser} />
                         </div>
                         <div className='absolute -bottom-20 left-4 z-30'>
                             <Avatar url={profile?.avatar} size={'big'} editable={isMyUser} onChange={fetchUser} />

@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { BounceLoader } from 'react-spinners';
 
 type Props = {
-    url: string;
+    url?: string;
     editable: boolean;
     onChange: any;
 }
@@ -35,14 +35,18 @@ export default function Cover({url, editable, onChange}: Props) {
     return (
         <div className='h-56 overflow-hidden flex justify-center'>
             <div className='relative'>
-                <Image
-                    src={url}
-                    alt=''
-                    height={1000}
-                    width={1000}
-                    priority
-                    className='h-56 object-cover rounded-t-md'
-                />
+                {url ? (
+                    <Image
+                        src={url}
+                        alt=''
+                        height={1000}
+                        width={1000}
+                        priority
+                        className='h-56 object-cover rounded-t-md'
+                    />
+                ) : (
+                    <div className='w-full h-full bg-gray-500' />
+                )}
             </div>
             {isUploading && (
                 <div className='absolute w-full h-full flex items-center rounded-t-md inset-0 bg-white bg-opacity-80 z-10'>

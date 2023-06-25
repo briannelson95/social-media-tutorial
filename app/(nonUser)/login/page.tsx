@@ -2,7 +2,7 @@
 import LoginCard from '@/components/LoginCard'
 import { supabase } from '@/lib/supabaseClient';
 import { useSession } from '@supabase/auth-helpers-react'
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 
 export default function LoginPage() {
@@ -10,9 +10,10 @@ export default function LoginPage() {
     const supabaseClient = supabase;
     const router = useRouter();
 
-    // useEffect(() => {
-    //     if (session) router.push('/')
-    // }, [session, router]);
+    useEffect(() => {
+        console.log(session)
+        if (session) redirect('/')
+    }, [session, router]);
 
     return (
         <main className='h-screen flex items-center justify-center'>

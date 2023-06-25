@@ -21,16 +21,16 @@ export default function ProfileInfo() {
             .eq('id', profile)
             .then(result => {
                 console.log(result)
-                if(!result.error) {
-                    setBio(result.data?.[0])
-                }
+                if(result.data) {
+                    setBio(result.data[0])
+                } return;
             })
     }, [])
 
     return (
         <Card noPadding={false}>
             <h2 className='text-3xl mb-2'>About Me</h2>
-            {bio === null ? (
+            {bio == null ? (
                 <>Nothing to show yet...</>
             ) : (
                 <p className='mb-2 text-sm'>{bio}</p>

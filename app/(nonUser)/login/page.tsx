@@ -10,9 +10,9 @@ export default function LoginPage() {
     const supabaseClient = supabase;
     const router = useRouter();
 
-    useEffect(() => {
-        if (session) router.push('/')
-    }, [session, router]);
+    // useEffect(() => {
+    //     if (session) router.push('/')
+    // }, [session, router]);
 
     return (
         <main className='h-screen flex items-center justify-center'>

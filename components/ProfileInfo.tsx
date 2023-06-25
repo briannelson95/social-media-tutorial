@@ -3,12 +3,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import Card from './Card'
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { ProfileContext } from '@/contexts/UserContext';
+import { useParams } from 'next/navigation';
 
 export default function ProfileInfo() {
     const session = useSession();
     const supabase = useSupabaseClient();
 
-    const profile: any = useContext(ProfileContext);
+    const params = useParams()
+    const profile: any = params.id;
     console.log(profile)
 
     const [bio, setBio]:any = useState('');

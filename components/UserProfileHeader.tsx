@@ -52,8 +52,6 @@ export default function UserProfileHeader({children}: {children: React.ReactNode
                 }
                 setEditProfile(false)
             })
-
-        
     }
 
     const [editProfile, setEditProfile] = useState(false);

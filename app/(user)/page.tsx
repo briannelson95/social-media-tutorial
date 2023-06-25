@@ -11,11 +11,6 @@ export default function Home() {
   const supabase = useSupabaseClient();
   const [posts, setPosts]:any = useState([]);
   const [profile, setProfile]:any = useState(null);
-  // let onPost: any
-
-  useEffect(() => {
-    fetchPosts();
-  }, [])
 
   useEffect(() => {
     if (!session?.user.id) {
@@ -30,6 +25,10 @@ export default function Home() {
         }
       })
   }, [session?.user.id]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [])
 
   function fetchPosts() {
     supabase.from('posts')

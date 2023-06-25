@@ -40,8 +40,6 @@ export default function Home() {
         })
   };
 
-  // console.log(session)
-
   return (
     <UserContext.Provider value={{ profile, fetchPosts }}>
       <main>

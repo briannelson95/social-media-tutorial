@@ -11,11 +11,8 @@ export default function LoginPage() {
     const router = useRouter();
 
     useEffect(() => {
-        console.log(session)
         if (session) redirect('/')
     }, [session, router]);
-
-    // if (session) redirect('/')
 
     return (
         <main className='h-screen flex items-center justify-center'>

@@ -169,9 +169,7 @@ export default function Post({id, content, profiles:authorProfile, created_at, p
                                                     fetchPosts()
                                                 }
                                                 setDropDown(false);
-                                            } else {
-                                                console.log(result)
-                                            }
+                                            } 
                                         })
                                 })
                         })
